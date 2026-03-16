@@ -1,0 +1,9 @@
+# Huwag i-upload ang database connection (Importante!)
+db_conn.php
+
+# Huwag i-upload ang mga pictures ng resibo para 'di bumigat ang GitHub
+uploads/
+
+# System files ng Mac/Windows
+.DS_Store
+Thumbs.db

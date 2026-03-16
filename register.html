@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Tina's Jewelries</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            margin: 20px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            color: #d4af37;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            color: #ccc;
+            letter-spacing: 1px;
+        }
+
+        form { display: flex; flex-direction: column; gap: 15px; }
+
+        /* Password Wrapper for the Icon */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: #d4af37; background: rgba(255, 255, 255, 0.15); }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #d4af37; /* Gold Icon */
+            font-size: 0.9rem;
+        }
+
+        button {
+            padding: 15px;
+            margin-top: 10px;
+            background: #d4af37;
+            color: #1a1a1a;
+            border: 1px solid #d4af37;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        button:hover { background: transparent; color: #d4af37; }
+
+        .footer-links { margin-top: 25px; font-size: 0.8rem; }
+        .footer-links a { color: #d4af37; text-decoration: none; font-weight: 600; }
+        .footer-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Account</h1>
+        <p class="subtitle">Join Tina's Jewelries for exclusive offers</p>
+        
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <input type="text" name="fullname" placeholder="Full Name" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            
+            <div class="password-container">
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <i class="fa-solid fa-eye toggle-password" onclick="togglePass('password', this)"></i>
+            </div>
+
+            <div class="password-container">
+                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+                <i class="fa-solid fa-eye toggle-password" onclick="togglePass('confirm_password', this)"></i>
+            </div>
+            
+            <button type="submit">Register Now</button>
+        </form>
+
+     <div class="footer-links">
+    <p>Already have an account? <a href="login.html">Log In</a></p>
+    <p style="margin-top: 10px;"><a href="index.php">← Back to Home</a></p> </div>
+
+    <script>
+    // Function para sa Show/Hide Password
+    function togglePass(id, icon) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+    }
+
+    async function handleRegister(event) {
+        event.preventDefault();
+        const form = event.target;
+        const password = form.password.value;
+        const confirm = form.confirm_password.value;
+
+        if (password !== confirm) {
+            alert("Oops! Hindi magkamukha ang password mo.");
+            return;
+        }
+
+        let formData = new FormData(form);
+
+        try {
+            let response = await fetch('register.php', {
+                method: 'POST',
+                body: formData
+            });
+            let result = await response.text();
+
+            if (result.trim() === "success") {
+                alert("Registration Successful! ✨ Pwede ka na mag-login.");
+                window.location.href = "login.html";
+            } else {
+                alert("Error: " + result);
+            }
+        } catch (error) {
+            alert("Connection error! I-check ang XAMPP.");
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Tina's Jewelries</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 50px 40px;
+            border-radius: 4px; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            margin: 20px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+            color: #d4af37; 
+            letter-spacing: 2px;
+            text-transform: lowercase; 
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            color: #ccc;
+            letter-spacing: 1px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #d4af37;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        button {
+            padding: 15px;
+            margin-top: 10px;
+            background: #d4af37;
+            color: #1a1a1a;
+            border: 1px solid #d4af37;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        button:hover {
+            background: transparent;
+            color: #d4af37;
+        }
+
+        .footer-links {
+            margin-top: 25px;
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>tina’s jewelry</h1>
+        <p class="subtitle">Please log in to access your account</p>
+        
+       <form action="admin/login.php" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+          <button type="submit" name="login">Login</button>
+        </form>
+
+       <div class="footer-links">
+    <a href="forgot-password.php">Forgot Password?</a>
+    <p>Don't have an account? <a href="register.html">Register</a></p>
+    <a href="index.php" style="margin-top: 10px;">← Back to Home</a> </div>
+</body>
+</html>

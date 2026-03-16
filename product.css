@@ -1,0 +1,119 @@
+/* Import fonts para consistent sa Home page */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fffaf5;
+    padding: 50px 5%;
+    color: #333;
+}
+
+.title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 50px;
+    color: #1a1a1a;
+    letter-spacing: 2px;
+}
+
+/* --- Products Grid Layout --- */
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Individual Product Card --- */
+.product {
+    background: #fff;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #eee;
+    transition: all 0.4s ease;
+}
+
+.product:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    border-color: #d4af37; /* Gold border on hover */
+}
+
+.product img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover; /* Para hindi ma-stretch ang image */
+    margin-bottom: 20px;
+}
+
+.product h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+}
+
+.product p {
+    color: #d4af37;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+/* --- Add to Cart Button --- */
+.product button {
+    background-color: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.product button:hover {
+    background-color: #d4af37;
+}
+
+/* --- View Cart Link --- */
+.view-cart {
+    display: block;
+    text-align: center;
+    margin-top: 50px;
+    text-decoration: none;
+    color: #1a1a1a;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-bottom: 2px solid #d4af37;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 5px;
+    transition: 0.3s;
+}
+
+.view-cart:hover {
+    color: #d4af37;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #888;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+/* 
+ETO YUNG BACK TO HOME CSS
+*/
+.back-btn:hover {
+    color: #d4af37; /* Magiging gold kapag tinapat ang mouse */
+    transform: translateX(-5px); /* Galaw nang kaunti pabalik */
+}

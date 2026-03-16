@@ -1,0 +1,58 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 50px;
+}
+
+/* BUTTON */
+.about-btn {
+  padding: 14px 30px;
+  background: linear-gradient(135deg, gold, #d4af37);
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.about-btn:hover {
+  transform: scale(1.05);
+}
+
+/* MODAL BACKGROUND */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 4, 11, 0);
+}
+
+/* MODAL BOX */
+.modal-box {
+  background: white;
+  max-width: 500px;
+  padding: 30px;
+  margin: 10% auto;
+  border-radius: 15px;
+  position: relative;
+  animation: fadeIn 0.4s;
+}
+
+.modal-box h2 {
+  margin-bottom: 15px;
+  color: #b8860b;
+}
+
+/* CLOSE BUTTON */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
