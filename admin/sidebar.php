@@ -1,3 +1,14 @@
+<?php
+// Siguraduhin na kasama ang db_conn.php para makapag-query tayo
+include('db_conn.php'); 
+
+// 1. Bilangin kung ilan ang 'Pending' orders
+$count_query = "SELECT COUNT(*) as pending_count FROM orders WHERE status = 'Pending'";
+$count_result = mysqli_query($conn, $count_query);
+$count_row = mysqli_fetch_assoc($count_result);
+$pending_orders = $count_row['pending_count'];
+?>
+
 <div class="sidebar">
     <div class="sidebar-brand">
         <h2>Tina's Gold</h2>
@@ -7,28 +18,35 @@
         <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>">
             <i class="fas fa-chart-line"></i> Dashboard
         </a>
+        
         <a href="view_orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'view_orders.php' ? 'active' : ''; ?>">
             <i class="fas fa-shopping-cart"></i> Orders
+            <?php if($pending_orders > 0): ?>
+                <span class="notif-badge"><?php echo $pending_orders; ?></span>
+            <?php endif; ?>
         </a>
+
         <a href="inventory.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'inventory.php' ? 'active' : ''; ?>">
             <i class="fas fa-gem"></i> Inventory
         </a>
+        
         <a href="sales_report.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'sales_report.php' ? 'active' : ''; ?>">
             <i class="fas fa-file-invoice-dollar"></i> Sales Report
         </a>
+        
         <a href="customers.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'customers.php' ? 'active' : ''; ?>">
             <i class="fas fa-users"></i> Customers
         </a>
-        <a href="profile.php"><i class="fas fa-cog"></i> Settings</a>
 
-        <li>
-    <a href="view_inquiries.php">
-        <i class="fa fa-envelope"></i> <span>Customer Inquiries</span>
-    </a>
-</li>
+        <a href="view_inquiries.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'view_inquiries.php' ? 'active' : ''; ?>">
+            <i class="fa fa-envelope"></i> Customer Inquiries
+        </a>
+
+        <a href="profile.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>">
+            <i class="fas fa-cog"></i> Settings
+        </a>
     </nav>
 
-    
     <div class="sidebar-footer">
         <a href="logout.php" class="logout-link">
             <i class="fas fa-sign-out-alt"></i> Logout
@@ -51,7 +69,7 @@
         flex-direction: column; 
         padding: 20px; 
         box-shadow: 4px 0 15px rgba(0,0,0,0.5); 
-        z-index: 9999 !important; /* PINAKAMAHALAGA: Para laging nasa ibabaw */
+        z-index: 9999 !important;
     }
 
     .sidebar-brand h2 { 
@@ -64,8 +82,8 @@
     }
 
     .sidebar-menu {
-        flex-grow: 1; /* Para itulak ang footer pababa */
-        overflow-y: auto; /* Para kung marami ang buttons, pwedeng i-scroll */
+        flex-grow: 1; 
+        overflow-y: auto; 
     }
 
     .sidebar-menu a { 
@@ -79,12 +97,26 @@
         transition: 0.3s; 
         font-weight: 500; 
         font-size: 15px;
+        position: relative; /* Importante para sa badge positioning */
     }
 
     .sidebar-menu a:hover, .sidebar-menu a.active { 
         background: var(--gold); 
         color: var(--dark) !important; 
         transform: translateX(5px); 
+    }
+
+    /* BADGE STYLE */
+    .notif-badge {
+        background-color: #ff4d4d;
+        color: white;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 2px 8px;
+        border-radius: 20px;
+        position: absolute;
+        right: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
     .sidebar-menu i { margin-right: 12px; width: 20px; text-align: center; }
