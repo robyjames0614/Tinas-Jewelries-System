@@ -20,7 +20,14 @@
             <i class="fas fa-users"></i> Customers
         </a>
         <a href="profile.php"><i class="fas fa-cog"></i> Settings</a>
+
+        <li>
+    <a href="view_inquiries.php">
+        <i class="fa fa-envelope"></i> <span>Customer Inquiries</span>
+    </a>
+</li>
     </nav>
+
     
     <div class="sidebar-footer">
         <a href="logout.php" class="logout-link">
