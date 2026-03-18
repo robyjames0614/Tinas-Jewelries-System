@@ -9,6 +9,10 @@ $count_row = mysqli_fetch_assoc($count_result);
 $pending_orders = $count_row['pending_count'];
 ?>
 
+<button class="mobile-nav-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</button>
+
 <div class="sidebar">
     <div class="sidebar-brand">
         <h2>Tina's Gold</h2>
@@ -70,6 +74,7 @@ $pending_orders = $count_row['pending_count'];
         padding: 20px; 
         box-shadow: 4px 0 15px rgba(0,0,0,0.5); 
         z-index: 9999 !important;
+        transition: 0.3s; /* Transition para sa sliding effect sa mobile */
     }
 
     .sidebar-brand h2 { 
@@ -97,7 +102,7 @@ $pending_orders = $count_row['pending_count'];
         transition: 0.3s; 
         font-weight: 500; 
         font-size: 15px;
-        position: relative; /* Importante para sa badge positioning */
+        position: relative;
     }
 
     .sidebar-menu a:hover, .sidebar-menu a.active { 
@@ -106,7 +111,6 @@ $pending_orders = $count_row['pending_count'];
         transform: translateX(5px); 
     }
 
-    /* BADGE STYLE */
     .notif-badge {
         background-color: #ff4d4d;
         color: white;
@@ -134,4 +138,41 @@ $pending_orders = $count_row['pending_count'];
         align-items: center;
         padding: 12px 15px; 
     }
+
+    /* MOBILE RESPONSIVE CSS */
+    .mobile-nav-toggle {
+        display: none; /* Default na tago sa desktop */
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 10000;
+        background: var(--gold);
+        color: var(--dark);
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    @media (max-width: 768px) {
+        .mobile-nav-toggle {
+            display: block; /* Lalabas lang ang button sa mobile */
+        }
+
+        .sidebar {
+            left: -250px; /* Itago ang sidebar sa mobile by default */
+        }
+
+        .sidebar.active {
+            left: 0; /* Slide in kapag 'active' class ay nadagdag */
+        }
+    }
 </style>
+
+<script>
+// Function para i-show/hide ang sidebar sa mobile
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('active');
+}
+</script>
