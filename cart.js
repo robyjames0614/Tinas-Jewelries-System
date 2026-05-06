@@ -1,4 +1,4 @@
-// 1. Load cart items from localStorage
+// 1. Load cart items from localStorage (Tiyaking tugma ang key sa product.php mo)
 let cart = JSON.parse(localStorage.getItem('tinas_cart')) || [];
 
 function updateCartDisplay() {
@@ -25,11 +25,11 @@ function updateCartDisplay() {
                             <span class="product-name">${item.name}</span>
                         </div>
                     </td>
-                    <td>₱${item.price.toLocaleString()}</td>
-                    <td>
+                    <td data-label="Price">₱${item.price.toLocaleString()}</td>
+                    <td data-label="Quantity">
                         <input type="number" value="${item.quantity}" min="1" class="qty-input" onchange="updateQty(${index}, this.value)">
                     </td>
-                    <td>₱${itemTotal.toLocaleString()}</td>
+                    <td data-label="Total">₱${itemTotal.toLocaleString()}</td>
                     <td><span class="remove-btn" onclick="removeItem(${index})">REMOVE</span></td>
                 </tr>
             `;
@@ -58,22 +58,26 @@ window.removeItem = function(index) {
     }
 }
 
-window.closeModal = function() {
-    document.getElementById('checkoutModal').style.display = 'none';
-}
-
+// Modal Control Logic
 const checkoutBtn = document.querySelector('.checkout-btn');
+const modal = document.getElementById('checkoutModal');
+
 if(checkoutBtn) {
     checkoutBtn.addEventListener('click', () => {
         if(cart.length === 0) {
             alert("Your cart is empty!");
             return;
         }
-        document.getElementById('checkoutModal').style.display = 'block';
+        modal.style.display = 'block';
     });
 }
 
-// FIX: Updated placeOrder to match Payment First setup
+// Function to close modal
+window.closeModal = function() {
+    if(modal) modal.style.display = 'none';
+}
+
+// --- MAIN FIX: PLACE ORDER LOGIC ---
 window.placeOrder = async function(event) {
     event.preventDefault();
     
@@ -85,19 +89,23 @@ window.placeOrder = async function(event) {
 
     const formData = new FormData();
     
-    // Kunin ang values base sa IDs sa cart.php
+    // Kunin ang data mula sa form fields
     formData.append('fullname', document.getElementById('custName').value);
     formData.append('address', document.getElementById('custAddress').value);
     formData.append('phone', document.getElementById('custPhone').value);
-    formData.append('payment_method', 'GCash'); // Hardcoded na dahil Payment First
-    formData.append('total_amount', cart.reduce((acc, item) => acc + (item.price * item.quantity), 0));
+    formData.append('payment_method', 'GCash');
     
-    const itemNames = cart.map(item => `${item.name} (x${item.quantity})`).join(", ");
-    formData.append('order_items', itemNames);
+    // Kalkulahin ang total
+    const totalAmount = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    formData.append('total_amount', totalAmount);
+    
+    // I-format ang order items para sa database
+    const itemDetails = cart.map(item => `${item.name} (x${item.quantity})`).join(", ");
+    formData.append('order_items', itemDetails);
 
-    // FIX: Match receipt key with PHP
+    // I-check ang Receipt Upload
     const fileInput = document.getElementById('receiptFile');
-    if (fileInput.files.length === 0) {
+    if (!fileInput.files || fileInput.files.length === 0) {
         alert("Please upload your GCash receipt first.");
         if(btn) {
             btn.disabled = false;
@@ -108,25 +116,26 @@ window.placeOrder = async function(event) {
     formData.append('receipt_img', fileInput.files[0]);
 
     try {
-        // Tiyakin ang path ng checkout_process.php
+        // Tiyaking tama ang URL: 'admin/checkout_process.php'
         const response = await fetch('admin/checkout_process.php', {
             method: 'POST',
             body: formData
         });
 
         const result = await response.text();
-        console.log("Server Response:", result); // I-check ang console para sa debug
+        console.log("Server Response Raw:", result);
 
+        // I-check kung "success" ang message mula sa PHP
         if (result.trim().toLowerCase().includes("success")) {
-            localStorage.removeItem('tinas_cart');
-            document.getElementById('checkoutModal').style.display = 'none';
-            document.getElementById('thankYouModal').style.display = 'block';
+            localStorage.removeItem('tinas_cart'); // Clear the cart
+            alert("Order Placed Successfully!");
+            window.location.href = 'index.php'; // Or track_order.php if you have it
         } else {
             alert("Order failed: " + result);
         }
     } catch (error) {
-        console.error("Error:", error);
-        alert("Server Error. Make sure 'admin/checkout_process.php' exists.");
+        console.error("Fetch Error:", error);
+        alert("Server Error. Make sure 'admin/checkout_process.php' exists and is reachable.");
     } finally {
         if(btn) {
             btn.disabled = false;
@@ -135,8 +144,5 @@ window.placeOrder = async function(event) {
     }
 }
 
-window.closeThankYou = function() {
-    window.location.href = 'index.php';
-}
-
+// Initial display load
 updateCartDisplay();

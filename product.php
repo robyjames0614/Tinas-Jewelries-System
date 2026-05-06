@@ -16,24 +16,34 @@ $result = mysqli_query($conn, $query);
     <style>
         body { font-family: 'Poppins', sans-serif; background: #fafafa; margin: 0; overflow-x: hidden; }
         
-        /* --- NAVIGATION (HAMBURGER STYLE) --- */
+        /* --- NAVIGATION --- */
         .navbar { 
             display: flex; justify-content: space-between; align-items: center; 
             padding: 0 5%; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky; top: 0; z-index: 1000; height: 70px;
         }
         
-        .logo { font-family: 'Playfair Display'; font-weight: bold; font-size: 24px; color: #1a1a1a; }
+        .logo { font-family: 'Playfair Display'; font-weight: bold; font-size: 20px; color: #1a1a1a; letter-spacing: 1px; }
 
         .nav-links { 
-            display: flex; list-style: none; gap: 25px; align-items: center; margin: 0; padding: 0; 
+            display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0; 
         }
-        .nav-links a { text-decoration: none; color: #333; font-weight: 500; transition: 0.3s; }
+        .nav-links a { text-decoration: none; color: #333; font-weight: 500; transition: 0.3s; font-size: 14px; }
         .nav-links a.active { color: #d4af37; font-weight: bold; }
 
-        .mobile-menu-btn { 
-            display: none; font-size: 24px; cursor: pointer; color: #1a1a1a; 
+        /* USER BADGE STYLE (GAYA NG INDEX) */
+        .user-nav-badge {
+            padding: 8px 15px; 
+            background: rgba(0,0,0,0.05); 
+            border-radius: 20px; 
+            display: flex; 
+            align-items: center;
+            gap: 8px;
         }
+        .user-nav-badge span { font-size: 11px; color: #444; font-weight: 600; }
+        .logout-link { color: #ff4d4d !important; font-size: 11px; font-weight: bold; text-decoration: none; }
+
+        .mobile-menu-btn { display: none; font-size: 24px; cursor: pointer; color: #1a1a1a; }
 
         /* --- PRODUCT GRID --- */
         .product-grid {
@@ -53,32 +63,35 @@ $result = mysqli_query($conn, $query);
         .product-card h3 { font-size: 1.1rem; margin-bottom: 10px; color: #1a1a1a; }
         .product-card p { color: #d4af37; font-weight: 600; font-size: 1.3rem; margin-bottom: 20px; }
         
+        /* ADD TO CART BUTTON (GAYA NG INDEX BUTTONS) */
         .add-to-cart {
-            background: #1a1a1a; color: #d4af37; border: none; padding: 12px;
-            width: 100%; cursor: pointer; font-weight: 600; text-transform: uppercase;
-            border-radius: 8px; transition: 0.3s;
+            background: #1a1a1a; 
+            color: #d4af37; 
+            border: none; 
+            padding: 12px;
+            width: 100%; 
+            cursor: pointer; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            border-radius: 5px; 
+            transition: 0.3s;
         }
-        .add-to-cart:hover { background: #d4af37; color: #1a1a1a; }
+        .add-to-cart:hover { 
+            background: #d4af37; 
+            color: #1a1a1a; 
+            transform: scale(1.05);
+        }
 
         /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
             .mobile-menu-btn { display: block; }
-
             .nav-links { 
                 display: none; flex-direction: column; position: absolute; 
                 top: 70px; left: 0; width: 100%; background: #fff; 
-                padding: 20px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1); gap: 0;
+                padding: 20px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             }
-
             .nav-links.active { display: flex !important; }
-
-            .nav-links li { width: 100%; text-align: center; padding: 15px 0; border-bottom: 1px solid #f9f9f9; }
-
-            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px 10px; }
-            .product-card img { height: 180px; }
-            .product-card h3 { font-size: 0.9rem; }
-            .product-card p { font-size: 1rem; }
-            h1 { font-size: 2.2rem !important; }
+            .user-nav-badge { margin: 10px auto; width: fit-content; }
         }
     </style>
 </head>
@@ -86,7 +99,7 @@ $result = mysqli_query($conn, $query);
 
 <header>
     <nav class="navbar">
-        <div class="logo">TINAS JEWELRIES GOLD TRADING</div>
+        <div class="logo">TINAS JEWELRIES</div>
         
         <div class="mobile-menu-btn" onclick="toggleNav()">
             <i class="fas fa-bars"></i>
@@ -101,9 +114,9 @@ $result = mysqli_query($conn, $query);
             <li><a href="cart.php" style="color: #d4af37;"><i class="fas fa-shopping-cart"></i> Cart</a></li>
             
             <?php if(isset($_SESSION['username'])): ?>
-                <li style="background: #fafafa; padding: 10px;">
-                    <span style="font-size: 13px; color: #666;">Hi, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
-                    <a href="admin/logout.php" style="color: #ff4d4d; margin-left: 10px; font-size: 13px;">Logout</a>
+                <li class="user-nav-badge">
+                    <span>Hi, <?php echo htmlspecialchars(strtoupper($_SESSION['username'])); ?>!</span>
+                    <a href="admin/logout.php" class="logout-link">Logout</a>
                 </li>
             <?php else: ?>
                 <li><a href="login.html">Login</a></li>
@@ -146,7 +159,6 @@ $result = mysqli_query($conn, $query);
 </div>
 
 <script>
-    // Toggle Menu Function
     function toggleNav() {
         const navLinks = document.getElementById('navLinks');
         navLinks.classList.toggle('active');

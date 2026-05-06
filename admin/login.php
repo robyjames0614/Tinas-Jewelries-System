@@ -12,23 +12,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
         
-        // I-check ang password (Plain Text or Hash)
         if ($password == $user['password'] || password_verify($password, $user['password'])) {
             
+            // --- ETO ANG FIX: Dapat may admin_id ---
+            $_SESSION['admin_id'] = $user['id']; 
             $_SESSION['username'] = $user['username'];
             
-            // Siguraduhin na walang extra spaces sa role mula sa database
             $user_role = trim(strtolower($user['role']));
             $_SESSION['role'] = $user_role;
 
-            // REDIRECT CHECK
             if ($user_role === 'admin' || $user_role === 'staff') {
                 echo "<script>
                     alert('Welcome Admin/Staff!');
                     window.location.href='dashboard.php';
                 </script>";
             } else {
-                // Para sa lahat ng 'client' ang role
                 echo "<script>
                     alert('Welcome Client! Redirecting to shop...');
                     window.location.href='../index.php';
