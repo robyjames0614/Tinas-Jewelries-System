@@ -1,5 +1,5 @@
 <?php
-include 'db_conn.php';
+include('../db_conn.php');
 
 // Kunin ang lahat ng orders mula sa database
 $sql = "SELECT * FROM orders ORDER BY order_date DESC";

@@ -1,120 +1,468 @@
-/* Import fonts para consistent sa Home page */
+/* Import fonts para consistent sa buong site */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap');
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #fffaf5;
-    padding: 50px 5%;
+    background: #fafafa;
+    margin: 0;
+    overflow-x: hidden;
     color: #333;
 }
 
-.title {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
+/* ==========================================
+   UNIFORM HEADER & NAVBAR STYLING
+   ========================================== */
+.navbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 0 5%; 
+    background: #ffffff; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08); 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    height: 75px; 
+    box-sizing: border-box;
+}
+
+.logo { 
+    font-family: 'Playfair Display', serif; 
+    font-weight: 700; 
+    font-size: 20px; 
+    color: #1a1a1a; 
+    letter-spacing: 1.5px; 
+    text-transform: uppercase;
+}
+
+.nav-links { 
+    display: flex; 
+    list-style: none; 
+    gap: 25px; 
+    align-items: center; 
+    margin: 0; 
+    padding: 0; 
+}
+
+.nav-links a { 
+    text-decoration: none; 
+    color: #333333; 
+    font-weight: 500; 
+    transition: all 0.3s ease; 
+    font-size: 14px; 
+    text-transform: capitalize;
+}
+
+/* Active Link State */
+.nav-links a:hover,
+.nav-links a.active { 
+    color: #d4af37 !important; 
+    font-weight: 600; 
+}
+
+/* Badge count sa Cart */
+.cart-badge {
+    background: #d4af37;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 50%;
+    min-width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* Login Nav Pill Style */
+.btn-login-nav {
+    color: #d4af37 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-decoration: none;
+    padding: 8px 18px;
+    border: 1px solid #d4af37;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-login-nav:hover {
+    background: #d4af37;
+    color: #ffffff !important;
+}
+
+.user-logged-box {
+    padding: 6px 14px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-size: 12px;
+}
+
+/* ==========================================
+   MOBILE RIGHT CONTROLS (CART + HAMBURGER)
+   ========================================== */
+.nav-right-controls {
+    display: none;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-icon-btn {
+    position: relative;
+    color: #d4af37;
+    font-size: 1.2rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-icon-btn .cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    border: 1.5px solid #ffffff;
+}
+
+.mobile-menu-btn { 
+    font-size: 22px; 
+    cursor: pointer; 
+    color: #1a1a1a; 
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .cart-nav-item { display: none !important; }
+    .nav-right-controls { display: flex !important; }
+    
+    .nav-links { 
+        display: none; 
+        flex-direction: column; 
+        position: absolute; 
+        top: 75px; 
+        left: 0; 
+        width: 100%; 
+        background: #fff; 
+        padding: 20px 0; 
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1); 
+        text-align: center; 
+    }
+    .nav-links.active { display: flex; }
+}
+
+/* ==========================================
+   UNIFORM BUTTON STYLES (Global Fix)
+   ========================================== */
+.add-to-cart, 
+.btn-send, 
+.btn-checkout, 
+.btn-view-cart {
+    background-color: #1a1a1a !important;
+    color: #d4af37 !important;
+    border: 1px solid #1a1a1a !important;
+    padding: 12px 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    display: block;
+    width: 100%;
     text-align: center;
-    margin-bottom: 50px;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.btn-view-cart {
+    background-color: #f4f4f4 !important;
+    color: #333333 !important;
+    border-color: #ddd !important;
+}
+
+/* Hover/Active states para sa lahat ng main buttons */
+.add-to-cart:hover, 
+.btn-send:hover, 
+.btn-checkout:hover, 
+.add-to-cart:active, 
+.btn-send:active, 
+.btn-checkout:active {
+    background-color: #d4af37 !important;
+    color: #1a1a1a !important;
+    border-color: #d4af37 !important;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.btn-view-cart:hover {
+    background-color: #e2e2e2 !important;
+    color: #1a1a1a !important;
+}
+
+/* --- Category Filter Buttons --- */
+.category-filter {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 30px auto 10px auto;
+    padding: 0 5%;
+    max-width: 1200px;
+}
+
+.filter-btn {
+    display: inline-block;
+    padding: 9px 24px;
+    border: 1px solid #d4af37;
     color: #1a1a1a;
-    letter-spacing: 2px;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: #ffffff;
+}
+
+.filter-btn:hover, 
+.filter-btn.active {
+    background-color: #d4af37 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 /* --- Products Grid Layout --- */
-.products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
+.product-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 20px; 
+    padding: 20px 5% 50px 5%; 
+    max-width: 1200px; 
+    margin: auto; 
 }
 
-/* --- Individual Product Card --- */
-.product {
-    background: #fff;
-    padding: 20px;
-    text-align: center;
+.product-card { 
+    background: white; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+    text-align: center; 
+    overflow: hidden; 
+    transition: 0.3s; 
     border: 1px solid #eee;
-    transition: all 0.4s ease;
 }
 
-.product:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-    border-color: #d4af37; /* Gold border on hover */
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border-color: #d4af37;
 }
 
-.product img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover; /* Para hindi ma-stretch ang image */
-    margin-bottom: 20px;
+.product-card img { 
+    width: 100%; 
+    height: 250px; 
+    object-fit: cover; 
+    cursor: pointer; 
 }
 
-.product h3 {
+.product-info { padding: 15px; }
+
+.product-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+}
+
+.product-info p {
+    color: #d4af37;
+    font-weight: 600;
     font-size: 1.1rem;
-    font-weight: 500;
-    margin-bottom: 10px;
-    color: #1a1a1a;
+    margin-bottom: 15px;
 }
 
-.product p {
+/* --- Quick View Modal FIX --- */
+.modal { 
+    display: none; 
+    position: fixed; 
+    z-index: 2000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.75); 
+    backdrop-filter: blur(5px); 
+    padding: 20px; 
+    box-sizing: border-box;
+    align-items: center; 
+    justify-content: center;
+}
+
+.modal-container { 
+    background: #fff; 
+    margin: auto; 
+    width: 100%; 
+    max-width: 750px; 
+    border-radius: 15px; 
+    display: flex; 
+    position: relative; 
+    overflow: hidden; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-left { 
+    flex: 1.2; 
+    background: #f4f4f4; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    max-height: 400px;
+    overflow: hidden;
+}
+
+.modal-left img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain; 
+    max-height: 400px;
+}
+
+.modal-right { 
+    flex: 1; 
+    padding: 30px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.close-modal { 
+    position: absolute; 
+    top: 10px; 
+    right: 15px; 
+    font-size: 28px; 
+    cursor: pointer; 
+    z-index: 10; 
+    color: #333;
+    transition: 0.2s;
+}
+
+.close-modal:hover {
     color: #d4af37;
-    font-weight: 600;
-    font-size: 1.2rem;
-    margin-bottom: 20px;
 }
 
-/* --- Add to Cart Button --- */
-.product button {
-    background-color: #1a1a1a;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    width: 100%;
-    cursor: pointer;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: 0.3s;
-}
-
-.product button:hover {
-    background-color: #d4af37;
-}
-
-/* --- View Cart Link --- */
-.view-cart {
-    display: block;
-    text-align: center;
-    margin-top: 50px;
-    text-decoration: none;
-    color: #1a1a1a;
-    font-weight: 600;
-    text-transform: uppercase;
-    border-bottom: 2px solid #d4af37;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    padding-bottom: 5px;
-    transition: 0.3s;
-}
-
-.view-cart:hover {
-    color: #d4af37;
-}
-
-.back-btn {
-    display: inline-block;
-    margin-bottom: 20px;
-    text-decoration: none;
-    color: #888;
+#modalDesc { 
+    white-space: pre-line; 
+    margin: 15px 0; 
+    color: #444; 
     font-size: 0.9rem;
-    transition: 0.3s;
+    max-height: 150px;
+    overflow-y: auto;
 }
 
-/* 
-ETO YUNG BACK TO HOME CSS
-*/
-.back-btn:hover {
-    color: #d4af37; /* Magiging gold kapag tinapat ang mouse */
-    transform: translateX(-5px); /* Galaw nang kaunti pabalik */
+/* --- Mini Cart Pop-up Navbar Styling --- */
+.mini-cart {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 300px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border: 1px solid #e2e2e2;
+    z-index: 1001;
+    overflow: hidden;
+    flex-direction: column;
 }
 
+.mini-cart.active {
+    display: flex;
+}
+
+.mini-cart-header {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mini-cart-header h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #d4af37;
+}
+
+.close-mini-cart {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.mini-cart-body {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.mini-cart-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.mini-cart-item img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.mini-cart-item .item-details h5 {
+    margin: 0;
+    font-size: 12px;
+    color: #333;
+}
+
+.mini-cart-item .item-details p {
+    margin: 2px 0 0 0;
+    font-size: 11px;
+    color: #d4af37;
+    font-weight: 600;
+}
+
+.mini-cart-footer {
+    padding: 12px 15px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+}
+
+.mini-cart-footer .total-price {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) { 
+    .modal-container { 
+        flex-direction: column; 
+        max-height: 85vh;
+        overflow-y: auto;
+    } 
+    .modal-left {
+        max-height: 250px;
+    }
+    
+    .mini-cart {
+        top: 50px;
+        right: -10px;
+        width: 280px;
+    }
+}

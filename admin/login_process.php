@@ -1,59 +1,42 @@
 <?php
-// 1. SAPILITANG IPAKITA ANG LAHAT NG ERROR
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
-// 2. CHECK KUNG MAY SESSION NA NAUNA (IWAS ERROR)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// 3. CHECK KUNG NAHAHANAP ANG DATABASE CONNECTION
-if (!file_exists('db_conn.php')) {
-    die("ERROR: Hindi mahanap ang db_conn.php sa loob ng admin folder!");
-}
-
-include('db_conn.php');
+session_start();
+include('../db_conn.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Siguraduhin na ang $conn ay galing sa db_conn.php
-    if (!$conn) {
-        die("ERROR: Database connection failed: " . mysqli_connect_error());
-    }
-
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password'];
 
     $query = "SELECT * FROM users WHERE username='$username'";
     $result = mysqli_query($conn, $query);
 
-    if (!$result) {
-        die("ERROR sa Query: " . mysqli_error($conn));
-    }
-
     if (mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
         
-      // ... (sa loob ng password check)
+        // Check password (Plain text comparison)
         if ($password == $user['password'] || password_verify($password, $user['password'])) {
             
-            // Eto ang kailangang idagdag para gumana ang dashboard check mo:
-            $_SESSION['admin_id'] = $user['id']; // Siguraduhin na 'id' ang column name sa DB
-            
+            // --- ETO ANG KRITIKAL NA LINYA ---
+            // Siguraduhin na 'id' ang column name sa table mo. 
+            // Kung 'user_id' ang nasa DB, palitan ito ng $user['user_id']
+            $_SESSION['admin_id'] = $user['id']; 
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = strtolower(trim($user['role']));
 
-            echo "Login Success! Redirecting to dashboard...";
-            header("Location: dashboard.php");
-            exit();
-        }
-         else {
-            die("Maling Password! <a href='login.php'>Balik sa Login</a>");
+            // Debugging: Tingnan natin kung na-save ba ang session
+            if(isset($_SESSION['admin_id'])) {
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                die("Session failed to save admin_id. Check your PHP session settings.");
+            }
+            
+        } else {
+            die("Maling Password! <a href='login.php'>Balik</a>");
         }
     } else {
-        die("Username hindi nahanap! <a href='login.php'>Balik sa Login</a>");
+        die("Username hindi nahanap sa database! <a href='login.php'>Balik</a>");
     }
-} else {
-    die("Direct access is not allowed.");
 }
 ?>

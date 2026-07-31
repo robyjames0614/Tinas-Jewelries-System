@@ -1,5 +1,7 @@
 <?php
-include('db_conn.php');
+// 1. Ilagay ang session_start sa pinakataas
+session_start();
+include('../db_conn.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
@@ -11,13 +13,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
-        // Kung match, dalhin sa page kung saan pwedeng palitan ang password
-        // Pinapasa natin ang ID via Session para safe
-        session_start();
-        $_SERVER['reset_user_id'] = $user['id'];
+        
+        // 2. Gamitin ang $_SESSION, hindi $_SERVER
+        $_SESSION['reset_user_id'] = $user['id'];
+        
         header("Location: new-password.php");
+        exit(); // Laging mag-exit pagkatapos ng header redirect
     } else {
         echo "<script>alert('Account not found. Please check your details.'); window.location='forgot-password.php';</script>";
+        exit();
     }
 }
 ?>

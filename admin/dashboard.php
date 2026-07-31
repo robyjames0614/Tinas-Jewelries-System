@@ -1,12 +1,17 @@
 <?php
-session_start();
-include('db_conn.php');
+// 1. Error reporting para makita agad kung may typo o missing files
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-/** * UPDATED SECURITY LAYER 
- * Gumagamit na tayo ng admin_id para hindi mag-conflict sa client sessions.
- */
+session_start();
+
+// 2. FIX: Lumabas ng isang folder gamit ang '../' para mahanap ang db_conn.php
+include('../db_conn.php');
+
+// Security Layer 
 if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php?error=unauthorized");
+    header("Location: ../login.php?error=unauthorized");
     exit();
 }
 
@@ -44,78 +49,95 @@ $total_users = $user_count_row['total_users'] ?? 0;
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #f4f7f6; display: flex; overflow-x: hidden; min-height: 100vh; }
+        body { background: #f4f7f6; display: flex; min-height: 100vh; overflow-x: hidden; }
 
         /* --- SIDEBAR --- */
         .sidebar { 
             width: 260px; height: 100vh; background: #1a1a1a; color: white; 
-            position: fixed; left: 0; top: 0; padding: 20px; transition: 0.3s; z-index: 1000;
+            position: fixed; left: 0; top: 0; padding: 20px; transition: 0.3s; z-index: 1100;
         }
-        .sidebar h2 { color: #d4af37; text-align: center; margin-bottom: 30px; font-size: 22px; letter-spacing: 2px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        .sidebar a { display: flex; align-items: center; color: #bbb; padding: 12px 15px; text-decoration: none; border-radius: 8px; margin-bottom: 8px; transition: 0.3s; font-size: 14px; }
-        .sidebar a i { margin-right: 12px; width: 20px; text-align: center; }
-        .sidebar a:hover, .sidebar a.active { background: rgba(212, 175, 55, 0.1); color: #d4af37; font-weight: 600; border-left: 4px solid #d4af37; }
+
+        /* --- MOBILE HEADER & OVERLAY --- */
+        .mobile-header {
+            display: none; width: 100%; background: #1a1a1a; color: #d4af37;
+            padding: 15px 20px; position: fixed; top: 0; left: 0; z-index: 1000;
+            justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1050;
+        }
 
         /* --- MAIN CONTENT --- */
         .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; transition: 0.3s; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
         .admin-profile { display: flex; align-items: center; gap: 10px; }
         .admin-profile img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #d4af37; object-fit: cover; }
 
         /* --- STATS CARDS --- */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; border-top: 4px solid #eee; transition: 0.3s; text-decoration: none; color: inherit; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        .stat-card h3 { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .stat-card p { font-size: 22px; font-weight: 700; color: #1a1a1a; }
-        .stat-card i { position: absolute; right: 20px; top: 20px; font-size: 22px; opacity: 0.15; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .stat-card { 
+            background: white; padding: 25px; border-radius: 20px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; 
+            border-top: 5px solid #eee; transition: 0.3s; text-decoration: none; color: inherit; 
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card h3 { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .stat-card p { font-size: 24px; font-weight: 700; color: #1a1a1a; }
+        .stat-card i { position: absolute; right: 20px; bottom: 20px; font-size: 30px; opacity: 0.1; }
         
         .card-pending { border-top-color: #ff9800; }
-        .card-gold { border-top-color: #d4af37; }
+        .card-gold { border-top-color: #d4af37; background: #1a1a1a; color: #d4af37; }
+        .card-gold p { color: #d4af37; }
         .card-red { border-top-color: #ff4d4d; }
         .card-blue { border-top-color: #2196f3; }
-        .card-green { border-top-color: #2e7d32; }
 
-        /* --- QUICK ACTIONS (UNIFORM BUTTONS) --- */
-        .quick-actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        /* --- QUICK ACTIONS --- */
+        .quick-actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
         .action-btn { 
-            padding: 15px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 14px;
+            padding: 18px; border-radius: 15px; text-decoration: none; font-weight: 600; font-size: 14px;
             display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-        .btn-gold { background: #d4af37; color: #1a1a1a; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2); }
-        .btn-dark { background: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; }
-        .btn-white { background: white; color: #1a1a1a; border: 1px solid #eee; }
+        .btn-gold { background: #d4af37; color: #1a1a1a; border: none; }
+        .btn-gold:hover { background: #b8952e; transform: scale(1.02); }
         
-        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .btn-dark { background: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; }
+        .btn-dark:hover { background: #333; transform: scale(1.02); }
 
-        .notif-badge { background: #ff4d4d; color: white; font-size: 10px; padding: 2px 7px; border-radius: 50%; margin-left: auto; }
+        .btn-white { background: white; color: #1a1a1a; border: 1px solid #eee; }
+        .btn-white:hover { background: #f9f9f9; transform: scale(1.02); }
 
+        /* --- RESPONSIVE --- */
         @media (max-width: 992px) {
             .sidebar { left: -260px; }
             .sidebar.active { left: 0; }
-            .main-content { margin-left: 0; padding: 20px; width: 100%; }
+            .mobile-header { display: flex; }
+            .main-content { margin-left: 0; width: 100%; padding: 100px 20px 40px; }
+            .overlay.active { display: block; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .quick-actions-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div class="sidebar" id="sidebar">
-    <h2>TINA'S ADMIN</h2>
-    <a href="dashboard.php" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
-    <a href="view_orders.php">
-        <i class="fas fa-shopping-bag"></i> Orders 
-        <?php if($pending_orders_count > 0): ?><span class="notif-badge"><?php echo $pending_orders_count; ?></span><?php endif; ?>
-    </a>
-    <a href="inventory.php"><i class="fas fa-gem"></i> Inventory</a>
-    <a href="sales_report.php"><i class="fas fa-chart-bar"></i> Sales Report</a>
-    <a href="users.php"><i class="fas fa-user-shield"></i> User Management</a>
-    <a href="customers.php"><i class="fas fa-user-friends"></i> Customers</a>
-    
-    <div style="position: absolute; bottom: 20px; width: calc(100% - 40px);">
-        <a href="logout.php" style="color: #ff4d4d; background: rgba(255, 77, 77, 0.05);"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </div>
+<div class="mobile-header">
+    <div style="font-weight: bold; letter-spacing: 1px;">TINA'S ADMIN</div>
+    <i class="fas fa-bars" style="font-size: 24px; cursor: pointer;" onclick="toggleSidebar()"></i>
 </div>
+
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<?php 
+// 3. Siguraduhin na ang sidebar.php ay nasa loob din ng admin folder
+include('sidebar.php'); 
+?>
 
 <div class="main-content">
     <div class="header">
@@ -124,7 +146,7 @@ $total_users = $user_count_row['total_users'] ?? 0;
             <p style="color: #888; font-size: 14px;">Welcome back, <strong>Admin Tina</strong>!</p>
         </div>
         <div class="admin-profile">
-            <div style="text-align: right;">
+            <div style="text-align: right; display: block;">
                 <p style="font-size: 13px; font-weight: 600;">Administrator</p>
                 <p style="font-size: 11px; color: #2e7d32;"><i class="fas fa-circle" style="font-size: 7px;"></i> Online</p>
             </div>
@@ -136,26 +158,27 @@ $total_users = $user_count_row['total_users'] ?? 0;
         <a href="view_orders.php" class="stat-card card-pending">
             <h3>New Orders</h3>
             <p style="color: #ff9800;"><?php echo $pending_orders_count; ?></p>
-            <i class="fas fa-clock" style="color: #ff9800;"></i>
+            <i class="fas fa-clock"></i>
         </a>
         <a href="sales_report.php" class="stat-card card-gold">
             <h3>Gross Revenue</h3>
             <p>₱<?php echo number_format($total_sales, 2); ?></p>
-            <i class="fas fa-coins" style="color: #d4af37;"></i>
+            <i class="fas fa-coins"></i>
         </a>
         <a href="inventory.php" class="stat-card card-red">
             <h3>Low Stock</h3>
             <p style="color: #ff4d4d;"><?php echo $low_stock_count; ?></p>
-            <i class="fas fa-exclamation-triangle" style="color: #ff4d4d;"></i>
+            <i class="fas fa-exclamation-triangle"></i>
         </a>
         <a href="users.php" class="stat-card card-blue">
             <h3>System Users</h3>
             <p><?php echo $total_users; ?></p>
-            <i class="fas fa-users-cog" style="color: #2196f3;"></i>
+            <i class="fas fa-users-cog"></i>
         </a>
     </div>
 
-    <h3 style="margin: 40px 0 15px; font-size: 18px; color: #1a1a1a;">Quick Actions</h3>
+    <h3 style="margin: 40px 0 15px; font-size: 18px; color: #1a1a1a; border-left: 4px solid #d4af37; padding-left: 10px;">Quick Actions</h3>
+    
     <div class="quick-actions-grid">
         <a href="add_product.php" class="action-btn btn-gold">
             <i class="fas fa-plus-circle"></i> Add Product
@@ -167,10 +190,21 @@ $total_users = $user_count_row['total_users'] ?? 0;
             <i class="fas fa-list"></i> View All Orders
         </a>
         <a href="profile.php" class="action-btn btn-white">
-            <i class="fas fa-cog"></i> Settings
+            <i class="fas fa-cog"></i> Account Settings
         </a>
     </div>
 </div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('overlay');
+        if(sidebar && overlay) {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+    }
+</script>
 
 </body>
 </html>

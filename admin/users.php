@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db_conn.php');
+include('../db_conn.php');
 
 // Security check: Admin lang ang pwedeng maka-access nito
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {

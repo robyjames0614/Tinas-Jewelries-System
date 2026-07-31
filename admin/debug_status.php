@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db_conn.php');
+include('../db_conn.php');
 
 // Kunin ang huling order para i-test
 $query = mysqli_query($conn, "SELECT id, order_items FROM orders ORDER BY id DESC LIMIT 1");

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db_conn.php');
+include('../db_conn.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $current_session_user = $_SESSION['username'];

@@ -21,7 +21,7 @@
             <button type="submit" class="reset-btn">VERIFY ACCOUNT</button>
         </form>
         <br>
-        <a href="login.html" style="font-size: 0.8rem; color: #d4af37;">Back to Login</a>
+        <a href="login.php" style="font-size: 0.8rem; color: #d4af37;">Back to Login</a>
     </div>
 </body>
 </html>

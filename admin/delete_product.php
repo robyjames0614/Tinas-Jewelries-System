@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db_conn.php');
+include('../db_conn.php');
 
 if (isset($_GET['id'])) {
     // Nagdagdag lang ako ng 'mysqli_real_escape_string' para safe sa SQL injection

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db_conn.php');
+include('../db_conn.php');
 
 // Security check
 if (!isset($_SESSION['username'])) {
@@ -32,10 +32,35 @@ $low_stock_count = mysqli_num_rows($low_stock_query);
         
         /* Main Content Area */
         .main-content { 
-            margin-left: 260px; /* Sakto sa width ng sidebar */
+            margin-left: 260px; 
             width: calc(100% - 260px); 
             padding: 40px; 
             transition: 0.3s; 
+        }
+
+        /* Mobile Header - Dito lilitaw ang hamburger menu */
+        .mobile-header {
+            display: none; /* Tago ito sa desktop */
+            background: #121212;
+            color: white;
+            padding: 15px 20px;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #d4af37;
+            border: none;
+            color: #1a1a1a;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
         }
         
         /* Header Styling */
@@ -79,7 +104,6 @@ $low_stock_count = mysqli_num_rows($low_stock_query);
 
         .product-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid #eee; }
         
-        /* Status Badges */
         .badge-category { background: #f1f3f5; color: #666; padding: 4px 10px; border-radius: 6px; font-size: 12px; }
         .price-text { font-weight: 600; color: #d4af37; }
         
@@ -87,15 +111,14 @@ $low_stock_count = mysqli_num_rows($low_stock_query);
         .low-stock-alert { color: #ff4d4d; background: rgba(255, 77, 77, 0.05); }
         .low-stock-label { color: #ff4d4d; font-size: 11px; display: block; margin-top: 4px; font-weight: 700; }
 
-        /* Actions */
         .action-links a { margin-right: 12px; font-size: 16px; transition: 0.2s; }
         .edit-icon { color: #3498db; }
         .delete-icon { color: #e74c3c; }
-        .edit-icon:hover, .delete-icon:hover { opacity: 0.7; }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            .main-content { margin-left: 0; width: 100%; padding: 80px 20px 20px; }
+            .mobile-header { display: flex; } /* Pakita ang top bar sa mobile */
+            .main-content { margin-left: 0; width: 100%; padding: 100px 20px 20px; }
             .header-section { flex-direction: column; align-items: flex-start; gap: 15px; }
             .add-btn { width: 100%; justify-content: center; }
         }
@@ -103,13 +126,20 @@ $low_stock_count = mysqli_num_rows($low_stock_query);
 </head>
 <body>
 
+    <div class="mobile-header">
+        <span style="font-weight: 700; color: #d4af37; letter-spacing: 1px;">TINA'S ADMIN</span>
+        <button class="menu-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
     <?php include('sidebar.php'); ?>
 
     <div class="main-content">
         <div class="header-section">
             <div>
                 <h1>Jewelry Inventory</h1>
-                <p style="color: #888; font-size: 13px;">You have <?php echo mysqli_num_rows($result); ?> total items in your collection.</p>
+                <p style="color: #888; font-size: 13px;">You have <?php echo mysqli_num_rows($result); ?> total items.</p>
             </div>
             <a href="add_product.php" class="add-btn">
                 <i class="fas fa-plus"></i> Add New Item
@@ -150,18 +180,18 @@ $low_stock_count = mysqli_num_rows($low_stock_query);
                             <td>
                                 <span class="stock-tag"><?php echo $row['stock']; ?> pcs</span>
                                 <?php if($is_low): ?>
-                                    <span class="low-stock-label"><i class="fas fa-exclamation-circle"></i> REORDER SOON</span>
+                                    <span class="low-stock-label"><i class="fas fa-exclamation-circle"></i> REORDER</span>
                                 <?php endif; ?>
                             </td>
                             <td class="action-links">
-                                <a href="edit_product.php?id=<?php echo $row['id']; ?>" class="edit-icon" title="Edit Item"><i class="fas fa-edit"></i></a>
-                                <a href="delete_product.php?id=<?php echo $row['id']; ?>" class="delete-icon" title="Delete Item" onclick="return confirm('Sigurado ka bang buburahin ang item na ito?')"><i class="fas fa-trash"></i></a>
+                                <a href="edit_product.php?id=<?php echo $row['id']; ?>" class="edit-icon"><i class="fas fa-edit"></i></a>
+                                <a href="delete_product.php?id=<?php echo $row['id']; ?>" class="delete-icon" onclick="return confirm('Burahin ang item?')"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
                         <?php 
                             } 
                         } else {
-                            echo "<tr><td colspan='6' style='text-align:center; padding: 50px; color: #999;'>No items found in inventory.</td></tr>";
+                            echo "<tr><td colspan='6' style='text-align:center; padding: 50px; color: #999;'>No items found.</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -171,7 +201,6 @@ $low_stock_count = mysqli_num_rows($low_stock_query);
     </div>
 
     <script>
-        // Toggle Sidebar function para sa mobile toggle sa sidebar.php
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('active');
         }

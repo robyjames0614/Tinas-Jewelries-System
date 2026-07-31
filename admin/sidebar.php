@@ -1,19 +1,17 @@
 <?php
-include('db_conn.php'); 
+// FIX: Ginagamit ang __DIR__ para sigurado ang path ng db_conn.php
+// Ito ay lalabas ng isang folder (admin -> htdocs) para mahanap ang connection
+include_once(__DIR__ . '/../db_conn.php'); 
 
 // Bilangin ang Pending orders para sa notification badge
 $count_query = "SELECT COUNT(*) as pending_count FROM orders WHERE status = 'Pending'";
 $count_result = mysqli_query($conn, $count_query);
 $count_row = mysqli_fetch_assoc($count_result);
-$pending_orders = $count_row['pending_count'];
+$pending_orders = $count_row['pending_count'] ?? 0;
 
 // Kunin ang kasalukuyang file name para sa active state
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
-
-<button class="mobile-nav-toggle" onclick="toggleSidebar()">
-    <i class="fas fa-bars"></i>
-</button>
 
 <div class="sidebar">
     <div class="sidebar-brand">
@@ -51,6 +49,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         <a href="profile.php" class="<?php echo $current_page == 'profile.php' ? 'active' : ''; ?>">
             <i class="fas fa-user-shield"></i> <span>Settings</span>
+        </a>
+        
+         <a href="view_client.php" class="<?php echo $current_page == 'view_client.php' ? 'active' : ''; ?>">
+            <i class="fas fa-gem"></i> <span>View client</span>
         </a>
     </nav>
 
@@ -126,7 +128,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         font-weight: 500;
     }
 
-    /* Active & Hover State - Ito ang fix para hindi mag-iba ang button */
     .sidebar-menu a:hover, 
     .sidebar-menu a.active { 
         background: var(--nav-hover); 
@@ -137,7 +138,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         background: linear-gradient(90deg, var(--nav-hover) 0%, transparent 100%);
         border-left: 3px solid var(--gold);
         border-radius: 0 12px 12px 0;
-        padding-left: 15px; /* Adjust for border */
+        padding-left: 15px; 
     }
 
     .sidebar-menu i { 
@@ -175,10 +176,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
         background: rgba(255, 107, 107, 0.1);
     }
 
-    /* Mobile Setup */
     @media (max-width: 768px) {
-        .sidebar { left: -260px; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .sidebar.active { left: 0; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
-        .mobile-nav-toggle { display: block; position: fixed; top: 20px; left: 20px; z-index: 10001; background: var(--gold); border: none; padding: 10px 12px; border-radius: 8px; cursor: pointer; }
+        .sidebar { 
+            left: -260px; 
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        .sidebar.active { 
+            left: 0; 
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5); 
+        }
     }
 </style>

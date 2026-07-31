@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db_conn.php');
+include('../db_conn.php');
 
 // Security check: Siguraduhing naka-login ang admin
 if (!isset($_SESSION['username'])) {
